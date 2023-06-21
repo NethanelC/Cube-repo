@@ -6,16 +6,14 @@ using DG.Tweening;
 
 public class ButtonSoundEvents : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private ButtonSounds _sounds;
-
     public void OnPointerEnter(PointerEventData eventData)
     {
-        AudioManager.instance.PlaySound(_sounds._buttonSounds[0]);
+        AudioManager.Instance.PlaySound(AudioManager.Sound.ButtonHover);
         transform.DOScale(1.2f, 0.5f);
     }
     public void OnPointerClick(PointerEventData eventData)
     {
-        AudioManager.instance.PlaySound(_sounds._buttonSounds[1]);
+        AudioManager.Instance.PlaySound(AudioManager.Sound.ButtonClick);
         transform.DOScale(1f, 0.5f);
     }
     public void OnPointerExit(PointerEventData eventData)

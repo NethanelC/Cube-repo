@@ -1,13 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Flop : Triggers
+public class Flop : BaseTrigger
 {
-    public static event Action Flopped;
-    protected override Action Triggered()
-    {
-        return Flopped;
-    }
+    protected override void Trigger() => _player.Flopped();
 }

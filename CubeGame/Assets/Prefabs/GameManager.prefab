@@ -9,10 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1621828691398832996}
-  - component: {fileID: 8082579543642121439}
   - component: {fileID: 1663631308877780922}
   - component: {fileID: 8832883045869337341}
-  - component: {fileID: 3452941544101876460}
   - component: {fileID: 6629949075279381842}
   m_Layer: 0
   m_Name: GameManager
@@ -36,18 +34,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8082579543642121439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8082579543642121438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55b7e6e4a8276ef48bb5458c7b4e5149, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1663631308877780922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,24 +58,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09d40cbd8d8ed3f4c97022dd892623d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ClipList:
-  - {fileID: 8300000, guid: c9b48ad7998d2254ca52728e508b3ea5, type: 3}
-  - {fileID: 8300000, guid: 6e3738d71782a9248babff699e05df2f, type: 3}
-  - {fileID: 8300000, guid: bf9959ae8c0be6844a38f604d6076fdf, type: 3}
-  - {fileID: 8300000, guid: c85ca8e3166dc8a4fb5cf0c312d3a437, type: 3}
   _audioSource: {fileID: 6629949075279381842}
---- !u!114 &3452941544101876460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8082579543642121438}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee0a918d63b2cc94b9d74fef73b0b9d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  _buttonHover: {fileID: 8300000, guid: cb536bf2bd9acba479ac2bfaaab146c5, type: 3}
+  _buttonClicked: {fileID: 8300000, guid: 060012cb429c5a646bc86688308de68d, type: 3}
+  _death: {fileID: 8300000, guid: c9b48ad7998d2254ca52728e508b3ea5, type: 3}
 --- !u!82 &6629949075279381842
 AudioSource:
   m_ObjectHideFlags: 0

@@ -8,8 +8,8 @@ using DG.Tweening;
 public class SkinsShop : MonoBehaviour
 {
     [SerializeField] private Skins _skins;
-    [SerializeField] private SkinButton _skinButton;
-    [SerializeField] private ColorButton _colorButton;
+    [SerializeField] private SkinButton _skinButtonPrefab;
+    [SerializeField] private ColorButton _colorButtonPrefab;
     [SerializeField] private RectTransform _skinsTransform, _colorsTransform, _tabsTransform;
     [SerializeField] private TextMeshProUGUI _starsText, _skinNameText;
     [SerializeField] private SpriteRenderer _rotatingSkinSprite;
@@ -21,18 +21,18 @@ public class SkinsShop : MonoBehaviour
     {
         SetNewSprite();
         SetNewColor();
+        _starsText.text = PlayerPrefs.GetInt("TotalStars").ToString();
         _rotatingSkinSprite.gameObject.transform.DOScale(Vector3.one * 2, 3).SetEase(Ease.OutCubic);
         _rotatingSkinSprite.gameObject.transform.DORotate(Vector3.forward * 180, 20).SetEase(Ease.Linear).SetLoops(-1);
-        for (int i = 0; i < _skins._sprites.Count; i++)
+        for (int i = 0; i < _skins.SkinsAmount; i++)
         {
-            Instantiate(_skinButton, _skinsTransform).Init(_skins._stars[i], _skins._sprites[i], i);
+            Instantiate(_skinButtonPrefab, _skinsTransform).Init(_skins.GetSkin(i), i);
         }
-        for (int i = 0; i < _skins._colors.Count; i++)
+        for (int i = 0; i < _skins.ColorsAmount; i++)
         {
-            Instantiate(_colorButton, _colorsTransform).NewColorButton(_skins._colors[i], i);
+            Instantiate(_colorButtonPrefab, _colorsTransform).Init(_skins.GetColor(i), i);
         }
-        _starsText.text = $"{PlayerPrefs.GetInt("TotalStars")}";
-        int maximumTabs = Mathf.CeilToInt(_skins._sprites.Count * 0.1f);
+        int maximumTabs = Mathf.CeilToInt(_skins.SkinsAmount * 0.1f);
         _tabsImages = new Image[maximumTabs];
         for (int i = 0; i < maximumTabs; i++)
         {
@@ -55,22 +55,22 @@ public class SkinsShop : MonoBehaviour
     private void OnEnable()
     {
         SkinButton.Clicked += SetNewSprite;
-        ColorButton._pressed += SetNewColor;
+        ColorButton.Pressed += SetNewColor;
     }
     private void OnDisable()
     {
         SkinButton.Clicked -= SetNewSprite;
-        ColorButton._pressed -= SetNewColor;
+        ColorButton.Pressed -= SetNewColor;
     }
     private void SetNewColor()
     {
-        Color color = _skins._colors[PlayerPrefs.GetInt("SkinColor", 0)];
+        Color color = _skins.GetColor(PlayerPrefs.GetInt("SkinColor", 0));
         _rotatingSkinSprite.color = color;
         _shopSkinImage.color = color;
     }
     private void SetNewSprite()
     {
-        Sprite sprite = _skins._sprites[PlayerPrefs.GetInt("SkinSprite", 0)];
+        Sprite sprite = _skins.GetSkin(PlayerPrefs.GetInt("SkinSprite", 0)).Sprite;
         _rotatingSkinSprite.sprite = sprite;
         _shopSkinImage.sprite = sprite;
         _skinNameText.text = sprite.name;

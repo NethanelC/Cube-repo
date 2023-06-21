@@ -3,11 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Flip : Triggers
+public class Flip : BaseTrigger
 {
-    public static event Action Flipped;
-    protected override Action Triggered()
-    {
-        return Flipped;
-    }
+    protected override void Trigger() => _player.Flipped();
 }

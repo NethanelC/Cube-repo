@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52522def9e339c348af80dcc6c3a54f6, type: 3}
   m_Name: Levels
   m_EditorClassIdentifier: 
-  _levelImage:
-  - {fileID: 21300000, guid: 09bb6df1a86f6c240b995bf787182165, type: 3}
-  - {fileID: 21300000, guid: b9bf0463353d1f946af0c4a7db7744ae, type: 3}
+  _allLevels:
+  - <Sprite>k__BackingField: {fileID: 21300000, guid: 09bb6df1a86f6c240b995bf787182165, type: 3}
+    <NormalMaximumStars>k__BackingField: 2
+    <HardMaximumStars>k__BackingField: 2
+  - <Sprite>k__BackingField: {fileID: 21300000, guid: b9bf0463353d1f946af0c4a7db7744ae, type: 3}
+    <NormalMaximumStars>k__BackingField: 3
+    <HardMaximumStars>k__BackingField: 3

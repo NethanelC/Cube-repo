@@ -2,43 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StarCounter : MonoBehaviour
+public class StarCounter
 {
-    private int _tempStars;
-    public static int CurrentStars { get; private set; }
-    private void OnEnable()
+    public StarCounter()
     {
-        Player.Respawned += ResetTempStars;
-        Star.CollectStar += AddStar;
-        Checkpoint.ReachedCheckPoint += SetCurrentStars;
-        Finish.FinishedGame += SetLevelStars;
+        Player.Death += ResetTempStars;
     }
-    private void OnDisable()
+    public int ThisLevelStars => PlayerPrefs.GetInt($"{LevelsManager.GetCurrentScene()} {Level.Stat.Stars}");
+    private int _temporaryStars, _gainedStars;
+    public int AllStars => _temporaryStars + _gainedStars;
+    public void ResetTempStars() => _temporaryStars = 0;
+    public void AddStar() => _temporaryStars++;
+    public void TryUpdateLevelStars()
     {
-        Player.Respawned -= ResetTempStars;
-        Star.CollectStar -= AddStar;
-        Checkpoint.ReachedCheckPoint -= SetCurrentStars;
-        Finish.FinishedGame -= SetLevelStars;
-    }
-    private void SetCurrentStars()
-    {
-        CurrentStars += _tempStars;
-        ResetTempStars();
-    }
-    private void ResetTempStars()
-    {
-        _tempStars = 0;
-    }
-    private void AddStar()
-    {
-        _tempStars++;
-    }
-    private void SetLevelStars()
-    {
-        SetCurrentStars();
-        if (PlayerPrefs.GetInt($"{LevelsManager.GetCurrentScene()} Current Stars", 0) < CurrentStars)
+        if (AllStars > ThisLevelStars)
         {
-            PlayerPrefs.SetInt($"{LevelsManager.GetCurrentScene()} Current Stars", CurrentStars);
+            PlayerPrefs.SetInt("TotalStars", PlayerPrefs.GetInt("TotalStars", 0) + (AllStars - ThisLevelStars));
+            PlayerPrefs.SetInt($"{LevelsManager.GetCurrentScene()} {Level.Stat.Stars}", AllStars);
         }
     }
 }

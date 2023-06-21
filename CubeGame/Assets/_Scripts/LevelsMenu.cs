@@ -8,39 +8,42 @@ using DG.Tweening;
 public class LevelsMenu : MonoBehaviour
 {
     [SerializeField] private Levels _levels;
-    [SerializeField] private LevelButton _levelButton;
+    [SerializeField] private LevelButton _levelButtonPrefab;
     [SerializeField] private RectTransform _levelsTransform;
-    [SerializeField] private TextMeshProUGUI _selectedLevel, _percentNormal, _percentHard, _starsNormal, _starsHard;
+    [SerializeField] private TextMeshProUGUI _selectedLevelText, _percentNormal, _percentHard, _starsNormal, _starsHard;
     [SerializeField] private Slider _sliderNormal, _sliderHard; 
     [SerializeField] private Button _buttonPrev, _buttonNext;
-    private int _currentLevel = 1;
+    private Level _selectedLevel => _levels.GetLevel(_currentLevel);
+    private int _currentLevel;
     private void Awake()
     {  
-        for (int i = 0; i < _levels._levelImage.Count; ++i)
+        for (int i = 0; i < _levels.LevelsAmount; ++i)
         {
-            Instantiate(_levelButton, _levelsTransform).Init(i + 1, _levels._levelImage[i]);
+            Instantiate(_levelButtonPrefab, _levelsTransform).Init(i, _levels.GetLevel(i));
         }
-        SetSpecificLevelDetails();
+        UpdateSelectedLevelStats();
         _buttonNext.onClick.AddListener(() => 
         {
-            _currentLevel = (_currentLevel++ % _levels._levelImage.Count) + 1;
-            SetSpecificLevelDetails();
+            _currentLevel = ++_currentLevel % _levels.LevelsAmount;
+            UpdateSelectedLevelStats();
         });
         _buttonPrev.onClick.AddListener(() =>
         {
-            _currentLevel = (_currentLevel-- % _levels._levelImage.Count) + 1;
-            SetSpecificLevelDetails();
+            _currentLevel = _currentLevel-- % _levels.LevelsAmount;
+            UpdateSelectedLevelStats();
         });
     }
-    private void SetSpecificLevelDetails()
+    private void UpdateSelectedLevelStats()
     {
-        _levelsTransform.DOAnchorPosX((_currentLevel - 1) * -1600, 0.5f).SetEase(Ease.Linear).OnComplete(() => 
+        _levelsTransform.DOAnchorPosX((_currentLevel) * -1600, 0.5f).SetEase(Ease.Linear).OnComplete(() => 
         {
-            _selectedLevel.text = $"Level {_currentLevel}";
-            _percentNormal.text = $"{_sliderNormal.value = PlayerPrefs.GetInt($"{_currentLevel} N Percent")} %";
-            _percentHard.text = $"{_sliderHard.value = PlayerPrefs.GetInt($"{_currentLevel} H Percent")} %";
-            _starsNormal.text = $"{PlayerPrefs.GetInt($"{_currentLevel} N Current Stars")} / {PlayerPrefs.GetInt($"{_currentLevel} N Maximum Stars")}";
-            _starsHard.text = $"{PlayerPrefs.GetInt($"{_currentLevel} H Current Stars")} / {PlayerPrefs.GetInt($"{_currentLevel} H Maximum Stars")}";
+            _selectedLevelText.text = $"Level {_currentLevel + 1}";
+            _sliderNormal.value = _levels.GetStatsOfLevel(_currentLevel, Level.Difficulty.Normal, Level.Stat.Percent);
+            _percentNormal.text = $"{_sliderNormal.value} %";
+            _sliderHard.value = _levels.GetStatsOfLevel(_currentLevel, Level.Difficulty.Hard, Level.Stat.Percent);
+            _percentHard.text = $"{_sliderHard.value} %";
+            _starsNormal.text = $"{_levels.GetStatsOfLevel(_currentLevel, Level.Difficulty.Normal, Level.Stat.Stars)} / {_selectedLevel.MaximumStars(Level.Difficulty.Normal)}";
+            _starsHard.text = $"{_levels.GetStatsOfLevel(_currentLevel, Level.Difficulty.Hard, Level.Stat.Stars)} / {_selectedLevel.MaximumStars(Level.Difficulty.Hard)}";
         });
     }
 }

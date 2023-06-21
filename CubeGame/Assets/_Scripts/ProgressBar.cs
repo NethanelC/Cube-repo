@@ -1,42 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
+
 public class ProgressBar : MonoBehaviour
-{  
-    [SerializeField] private Slider _slider;
-    private Transform _transform;
-    private float _xOfFinish;
-    //Caching the transform
-    private void Awake()
+{
+    [SerializeField] private Slider _progressSlider;
+    private Transform _playerTransform;
+    [Inject]
+    private void Construct(Finish finish, Player player)
     {
-        _transform = transform;     
+        _playerTransform = player.transform;
+        _maxX = finish.transform.position.x;
     }
-    private void Start()
-    {
-        _xOfFinish = Finish.Instance.gameObject.transform.position.x;
-    }
-    //Subscribing to events
-    private void OnEnable()
-    {
-        Finish.FinishedGame += SetLevelPercent;
-        Obstacle.Obstacled += SetLevelPercent;
-    }
-    //Unsubscribing from events
-    private void OnDisable()
-    {
-        Finish.FinishedGame -= SetLevelPercent;
-        Obstacle.Obstacled -= SetLevelPercent;
-    }
-    private void Update()
-    {
-        _slider.value = _transform.position.x / _xOfFinish;
-    }
-    private void SetLevelPercent()
-    {
-        if (Mathf.RoundToInt(_slider.value * 100) > PlayerPrefs.GetInt($"{LevelsManager.GetCurrentScene()} Percent", 0))
-        {
-            PlayerPrefs.SetInt($"{LevelsManager.GetCurrentScene()} Percent", Mathf.RoundToInt(_slider.value * 100));
-        }
-    }
+    private float _maxX;
+    private void OnEnable() => Player.Death += TryUpdateLevelPercent;
+    private void OnDisable() => Player.Death -= TryUpdateLevelPercent;
+    private void Update() => _progressSlider.value = _playerTransform.position.x / _maxX;
+    private void TryUpdateLevelPercent() => PlayerPrefs.SetInt($"{LevelsManager.GetCurrentScene()}{Level.Stat.Percent}", Mathf.RoundToInt(_progressSlider.value * 100));
 }

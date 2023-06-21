@@ -3,28 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using DG.Tweening;
+using Zenject;
 
 public class Finish : MonoBehaviour
 {
-    public static Finish Instance { get; private set; }
-    public static event Action FinishedGame;
+    [Inject] private readonly StarCounter _starCounter;
+    [Inject] private readonly AttemptCounter _attemptCounter;
     [SerializeField] private GameObject _finishPanel;
     [SerializeField] private TextMeshProUGUI _finishTextAttempts, _finishTextStars;
-    private void Awake()
-    {
-        Instance = Instance != null? Instance : this;
-    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        FinishedGame?.Invoke();
-        _finishTextAttempts.text = $"Attempt: {AttemptCounter.CurrentAttempts}";
-        _finishTextStars.text = $"{StarCounter.CurrentStars} / {PlayerPrefs.GetInt($"{LevelsManager.GetCurrentScene()} Maximum Stars")}"; 
-        if (StarCounter.CurrentStars > PlayerPrefs.GetInt(LevelsManager.GetCurrentScene(), 0))
-        {
-            PlayerPrefs.SetInt("TotalStars", PlayerPrefs.GetInt("TotalStars", 0) + (StarCounter.CurrentStars - PlayerPrefs.GetInt(LevelsManager.GetCurrentScene(), 0)));
-            PlayerPrefs.SetInt(LevelsManager.GetCurrentScene(), StarCounter.CurrentStars);
-        }
+        PlayerPrefs.SetInt($"{LevelsManager.GetCurrentScene()}{Level.Stat.Percent}", 100);
+        _finishTextAttempts.text = $"Attempt: {_attemptCounter.CurrentAttempts}";
+        _finishTextStars.text = $"{_starCounter.AllStars} / {_starCounter.ThisLevelStars}";
+        _starCounter.TryUpdateLevelStars();
         _finishPanel.SetActive(true);
     }
 }

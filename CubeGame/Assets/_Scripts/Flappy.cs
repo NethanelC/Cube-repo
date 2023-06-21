@@ -1,13 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Flappy : Triggers
+public class Flappy : BaseTrigger
 {
-    public static event Action Flappied;
-    protected override Action Triggered()
-    {
-        return Flappied;
-    }
+    protected override void Trigger() => _player.Flappied();
 }
