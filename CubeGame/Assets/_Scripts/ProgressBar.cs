@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -8,16 +5,9 @@ using Zenject;
 public class ProgressBar : MonoBehaviour
 {
     [SerializeField] private Slider _progressSlider;
-    private Transform _playerTransform;
-    [Inject]
-    private void Construct(Finish finish, Player player)
-    {
-        _playerTransform = player.transform;
-        _maxX = finish.transform.position.x;
-    }
     private float _maxX;
-    private void OnEnable() => Player.Death += TryUpdateLevelPercent;
-    private void OnDisable() => Player.Death -= TryUpdateLevelPercent;
-    private void Update() => _progressSlider.value = _playerTransform.position.x / _maxX;
-    private void TryUpdateLevelPercent() => PlayerPrefs.SetInt($"{LevelsManager.GetCurrentScene()}{Level.Stat.Percent}", Mathf.RoundToInt(_progressSlider.value * 100));
+    [Inject]
+    private void Construct(Finish finish) => _maxX = finish.transform.position.x;
+    private void Update() => _progressSlider.value = transform.position.x / _maxX;
+    public void TryUpdateLevelPercent() => PlayerPrefs.SetInt($"{LevelsManager.GetCurrentScene()} {Level.Stat.Percent}", Mathf.RoundToInt(_progressSlider.value * 100));
 }

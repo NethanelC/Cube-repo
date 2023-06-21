@@ -1,6 +1,7 @@
 using Zenject;
-public class Star : BaseTrigger
+
+public class Star : SpecialModifier
 {
-    [Inject] private StarCounter _starCounter;
+    [Inject] private readonly StarCounter _starCounter;
     protected override void Trigger() => _starCounter.AddStar();
 }

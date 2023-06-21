@@ -1,13 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
-public class Jumpy : MonoBehaviour
+public class Jumpy : MovementModifier
 {
-    public static event Action Jumpied;
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        Jumpied?.Invoke();
-    }
+    protected override void Trigger() => _player.Jumpied();
 }

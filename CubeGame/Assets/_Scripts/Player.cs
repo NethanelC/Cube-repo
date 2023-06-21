@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,18 +7,28 @@ using Zenject;
 
 public class Player : MonoBehaviour
 {
-    public static event Action Death; 
-    [Inject] readonly private PlayerInputs _playerInputs;
+    public event Action Respawned;
     [SerializeField] private Camera _cam;
     [SerializeField] private Animator _anim;
     [SerializeField] private Rigidbody2D _rb;
     [SerializeField] private Image _cooldownImage;
     [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private Collider2D _collider;
+    [SerializeField] private Collider2D _collider; 
+    [SerializeField] private ProgressBar _progressBar;
+    private AttemptCounter _attemptCounter;
+    private StarCounter _starCounter;
+    private PlayerInputs _playerInputs;
     private readonly Dictionary<LayerMask, Action> _collisionMappings = new();
     private const float GRAVITY_SCALE = 11, X_VELOCITY = 9.5f, DASH_COOLDOWN = 5;
     private bool _flop, _flappy, _dashing, _jumping;
     private float _jumpTimer;
+    [Inject]
+    private void Construct(PlayerInputs playerInputs, AttemptCounter attemptCounter, StarCounter starCounter)
+    {
+        _playerInputs = playerInputs;
+        _attemptCounter = attemptCounter;
+        _starCounter = starCounter;
+    }
     #region Customization
     [Header("Customization")]
     [SerializeField] private Skins _skins;
@@ -46,23 +55,13 @@ public class Player : MonoBehaviour
         #endregion
         _rb.velocity = new(X_VELOCITY, 0);
     }
-    //Events subscription
-    private void OnEnable()
-    {
-        _playerInputs.Player.Dash.performed += OnDash;
-        Jumpy.Jumpied += Jumpied;
-        Speedy.Speedied += Speedied;
-    }
-    //Events unsubscription
-    private void OnDisable()
-    {
-        _playerInputs.Player.Dash.performed -= OnDash;
-        Jumpy.Jumpied -= Jumpied;
-        Speedy.Speedied -= Speedied;
-    }
+    private void OnEnable() => _playerInputs.Player.Dash.performed += OnDash;
+    private void OnDisable() => _playerInputs.Player.Dash.performed -= OnDash;
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Space) && !_jumping || Input.GetKeyDown(KeyCode.Space) && _flappy)
+        bool jumpKey = Input.GetKey(KeyCode.Space);
+        bool jumpKeyHeld = Input.GetKeyDown(KeyCode.Space);
+        if (jumpKey && !_jumping || jumpKeyHeld && _flappy)
         {
             Jump();
         }
@@ -107,10 +106,14 @@ public class Player : MonoBehaviour
         AudioManager.Instance.PlaySound(AudioManager.Sound.Death);
         _cam.DOShakePosition(1, 0.2f, 10, 90, true, ShakeRandomnessMode.Harmonic);
         _anim.SetTrigger("Death");
-        Death?.Invoke();
+        _progressBar.TryUpdateLevelPercent();
+        
     }
     public void Respawn()
     {
+        _attemptCounter.IncrementAttempts();
+        _starCounter.ResetTempStars();
+        _jumpTimer = 0;
         _jumping = false;
         _flop = false;
         _flappy = false;

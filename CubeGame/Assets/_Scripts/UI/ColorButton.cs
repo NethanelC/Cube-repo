@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -15,14 +13,8 @@ public class ColorButton : MonoBehaviour, IPointerClickHandler, IUpdateSelectedH
         _buttonImage.color = color;
         _index = index;
     }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        UpdateSelectedColor();
-    }
-    public void OnUpdateSelected(BaseEventData eventData)
-    {
-        UpdateSelectedColor();
-    }
+    public void OnPointerClick(PointerEventData eventData) => UpdateSelectedColor();
+    public void OnUpdateSelected(BaseEventData eventData) => UpdateSelectedColor();
     private void UpdateSelectedColor()
     {
         PlayerPrefs.SetInt("SkinColor", _index);

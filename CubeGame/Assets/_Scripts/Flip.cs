@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Flip : BaseTrigger
+public class Flip : SpecialModifier
 {
     protected override void Trigger() => _player.Flipped();
 }

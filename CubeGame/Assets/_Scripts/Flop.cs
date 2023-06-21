@@ -1,4 +1,4 @@
-public class Flop : BaseTrigger
+public class Flop : SpecialModifier
 {
     protected override void Trigger() => _player.Flopped();
 }

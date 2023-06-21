@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -21,20 +19,14 @@ public class SkinButton : MonoBehaviour, IPointerClickHandler, IUpdateSelectedHa
         if (PlayerPrefs.GetInt("TotalStars", 0) < skin.ReqStars)
         {
             _isClickable = false;
-            _skinStarsNeeded.text = $"{skin.ReqStars}";
+            _skinStarsNeeded.text = skin.ReqStars.ToString();
             _neededStars.SetActive(true);
             return;
         }
         _neededStars.SetActive(false);
     }
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        TryUpdateSelectedSkin();
-    }
-    public void OnUpdateSelected(BaseEventData eventData)
-    {
-        TryUpdateSelectedSkin();
-    }
+    public void OnPointerClick(PointerEventData eventData) => TryUpdateSelectedSkin();
+    public void OnUpdateSelected(BaseEventData eventData) => TryUpdateSelectedSkin();
     private void TryUpdateSelectedSkin()
     {
         if (!_isClickable)
