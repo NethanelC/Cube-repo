@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
@@ -17,12 +15,15 @@ public class AudioManager : MonoBehaviour
     }
     private void Awake()
     {
-        Instance = Instance != null ? Instance : this;
-    }
-    public void PlaySound(Sound sound)
-    {
-        _audioSource.PlayOneShot(GetAudioClip(sound));
-    }
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            return;
+        }
+        Destroy(gameObject);
+    } 
+    public void PlaySound(Sound sound) => _audioSource.PlayOneShot(GetAudioClip(sound));
     private AudioClip GetAudioClip(Sound sound) => sound switch
     {
         Sound.ButtonHover => _buttonHover,

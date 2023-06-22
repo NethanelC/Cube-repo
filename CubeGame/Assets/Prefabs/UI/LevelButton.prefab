@@ -506,7 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 617585d2048227f4387c99d95fe7d903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _levelsManager: {fileID: 1663631308877780922, guid: 853ed405decc1d2439aa7936d9fccd04, type: 3}
+  _levelsManager: {fileID: 7368475330115578153, guid: da08a91b7cb6c1440b65f150f5c5fddd, type: 3}
   _button: {fileID: 4697234851275465658}
   _normalButton: {fileID: 4697234850789548546}
   _hardButton: {fileID: 4697234850193963719}
@@ -597,7 +597,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fcf2f1847fd018f48a8ef7d0345669ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sounds: {fileID: 11400000, guid: 538109ec80cb3d543bb6036488a4005a, type: 2}
 --- !u!1 &4697234851555180086
 GameObject:
   m_ObjectHideFlags: 0

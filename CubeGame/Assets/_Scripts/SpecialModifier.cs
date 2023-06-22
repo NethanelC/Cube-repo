@@ -1,6 +1,6 @@
 using UnityEngine;
-using Zenject;
 using DG.Tweening;
+using Zenject;
 
 public abstract class SpecialModifier : MonoBehaviour
 {
