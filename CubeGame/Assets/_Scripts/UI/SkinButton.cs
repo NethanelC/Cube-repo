@@ -10,7 +10,7 @@ public class SkinButton : MonoBehaviour, IPointerClickHandler, IUpdateSelectedHa
     [SerializeField] private Image _skinImage;
     [SerializeField] private TextMeshProUGUI _skinStarsNeeded;
     [SerializeField] private GameObject _neededStars;
-    private bool _isClickable;
+    private bool _isClickable = true;
     private int _index;
     public void Init(Skin skin, int index)
     {

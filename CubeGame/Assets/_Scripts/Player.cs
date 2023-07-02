@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private PlayerInputs _playerInputs;
     private readonly Dictionary<LayerMask, Action> _collisionMappings = new();
     private const float GRAVITY_SCALE = 11, X_VELOCITY = 9.5f, DASH_COOLDOWN = 5;
-    private bool _flop, _flappy, _dashing, _jumping;
+    private bool _flop, _flappy, _dashing, _jumping, _isAlive;
     private float _jumpTimer;
     [Inject]
     private void Construct(PlayerInputs playerInputs, AttemptCounter attemptCounter, StarCounter starCounter)
@@ -98,15 +98,16 @@ public class Player : MonoBehaviour
     private void OnTouchObstacle()
     {
         StopMovement();
+        _isAlive = false;
         _dashing = true;
         _jumping = true;
         DOTween.KillAll(this);
         _cooldownImage.fillAmount = 0;
         _psDeath.Play();
-        AudioManager.Instance.PlaySound(AudioManager.Sound.Death);
         _cam.DOShakePosition(1, 0.2f, 10, 90, true, ShakeRandomnessMode.Harmonic);
         _anim.SetTrigger("Death");
         _progressBar.TryUpdateLevelPercent();
+        AudioManager.Instance.PlaySound(AudioManager.Sound.Death);
     }
     public void Respawn()
     {
@@ -117,6 +118,7 @@ public class Player : MonoBehaviour
         _flop = false;
         _flappy = false;
         _dashing = false;
+        _isAlive = true;
         _cam.transform.rotation = Quaternion.identity;
         _psWalk.Play();
         _anim.Play("PlayerIdle", 0);
@@ -138,7 +140,7 @@ public class Player : MonoBehaviour
         _trail.emitting = true;
         _rb.AddForce(Vector2.right * X_VELOCITY, ForceMode2D.Impulse);
         _cooldownImage.fillAmount = 1;
-        _cooldownImage.DOFillAmount(0, DASH_COOLDOWN).SetEase(Ease.Linear).OnComplete(() => _dashing = false);
+        _cooldownImage.DOFillAmount(0, DASH_COOLDOWN).SetEase(Ease.Linear).OnComplete(() => _dashing = !_isAlive);
         _trail.DOTime(0.2f, 0.2f).OnComplete(() => _trail.emitting = false);
     }
     private void Jump()
