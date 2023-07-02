@@ -107,7 +107,6 @@ public class Player : MonoBehaviour
         _cam.DOShakePosition(1, 0.2f, 10, 90, true, ShakeRandomnessMode.Harmonic);
         _anim.SetTrigger("Death");
         _progressBar.TryUpdateLevelPercent();
-        
     }
     public void Respawn()
     {
@@ -122,6 +121,7 @@ public class Player : MonoBehaviour
         _psWalk.Play();
         _anim.Play("PlayerIdle", 0);
         _anim.Play("PlayerIdle", 1);
+        Respawned?.Invoke();
         transform.position = Checkpoint.CheckpointPosition;
         _rb.gravityScale = GRAVITY_SCALE;
         _rb.constraints = RigidbodyConstraints2D.FreezeRotation;
