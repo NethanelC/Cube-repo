@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     private StarCounter _starCounter;
     private PlayerInputs _playerInputs;
     private readonly Dictionary<LayerMask, Action> _collisionMappings = new();
-    private const float GRAVITY_SCALE = 11, X_VELOCITY = 9.5f, DASH_COOLDOWN = 5;
+    private const float GRAVITY_SCALE = 11, X_VELOCITY = 9.5f, DASH_COOLDOWN = 5, DASH_POWER = 50;
     private bool _flop, _flappy, _dashing, _jumping, _isAlive;
     private float _jumpTimer;
     [Inject]
@@ -138,7 +138,7 @@ public class Player : MonoBehaviour
         }
         _dashing = true;
         _trail.emitting = true;
-        _rb.AddForce(Vector2.right * X_VELOCITY, ForceMode2D.Impulse);
+        _rb.AddForce(X_VELOCITY * DASH_POWER * Vector2.right, ForceMode2D.Force);
         _cooldownImage.fillAmount = 1;
         _cooldownImage.DOFillAmount(0, DASH_COOLDOWN).SetEase(Ease.Linear).OnComplete(() => _dashing = !_isAlive);
         _trail.DOTime(0.2f, 0.2f).OnComplete(() => _trail.emitting = false);
